@@ -1,11 +1,12 @@
 import asyncio
-from aiogram import Bot, Dispatcher, F
+from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
+from datetime import datetime, timedelta
 import requests
 import random
 
-from config import TOKEN, THE_CAT_API_KEY
+from config import TOKEN, THE_CAT_API_KEY, NASA_API_KEY
 
 # lesson_TG05_bot
 bot = Bot(token=TOKEN)
@@ -35,9 +36,33 @@ def get_breed_info(breed_name):
     return None
 
 
-@dp.message(Command("start"))
+def get_random_apod():
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=365)
+    random_date = start_date + (end_date - start_date) * random.random()
+    date_str = random_date.strftime("%Y-%m-%d")
+
+    url = f"https://api.nasa.gov/planetary/apod?api_key={NASA_API_KEY}&date={date_str}"
+    response = requests.get(url)
+    return response.json()
+
+
+@dp.message(CommandStart())
 async def start_command(message: Message):
-    await message.answer("Привет! Напиши мне название породы кошки, и я пришлю тебе её фото и описание.")
+    await message.answer("Привет! Введи команды: /cat или /apod")
+
+
+@dp.message(Command("cat"))
+async def start_command(message: Message):
+    await message.answer("Привет! Напиши мне название породы кошки, и я пришлю тебе её фото и описание")
+
+
+@dp.message(Command("apod"))
+async def random_apod(message: Message):
+    apod = get_random_apod()
+    title = apod['title']
+    photo_url = apod['url']
+    await message.answer_photo(photo=photo_url, caption=f"{title}")
 
 
 @dp.message()
