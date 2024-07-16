@@ -17,6 +17,11 @@ async def start_command(message: Message):
     await message.answer("Привет! Введи число, а я сообщу интересный факт о нём")
 
 
+@dp.message(Command('help'))
+async def img_command_handler(message: Message):
+    await message.answer("Этот бот сообщает интересный факт о введённом пользователем числе")
+
+
 def translate_text_ru(en_text):
     translator = Translator()
     ru_text = translator.translate(en_text, src='en', dest='ru').text
