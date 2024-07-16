@@ -7,11 +7,12 @@ import requests
 
 from config import TOKEN_TG05, UNSPLASH_ACCESS_KEY
 
-# Access Key для Unsplash API
-access_key = UNSPLASH_ACCESS_KEY
-
+# homework_TG05_bot
 bot = Bot(token=TOKEN_TG05)
 dp = Dispatcher()
+
+# Access Key для Unsplash API
+access_key = UNSPLASH_ACCESS_KEY
 
 
 @dp.message(CommandStart())
